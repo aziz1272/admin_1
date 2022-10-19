@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:admin_1/models/add_food/item_model.dart';
+import 'package:admin_1/models/add_food/item_size_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,7 +14,36 @@ class AddFood extends StatefulWidget {
 }
 
 class _AddFoodState extends State<AddFood> {
+  List<String> namesList = [];
+  List<String> videoList = [];
+  List<String> stepsList = [];
+  List<String> imgUrlList = [];
+  List<ItemModel> itemList = [];
+  List<ItemInSize> itemSizeModel = [];
   File? image;
+  bool isSuyuq = false;
+  bool isParhez = false;
+  bool isXamirli = false;
+  bool isPishiriq = false;
+  bool isFastFood = false;
+  int videoUrls = 1;
+  int imageCount = 1;
+  int foodName = 1;
+  int item = 1;
+  int itemSize = 1;
+  int steps = 1;
+  TextEditingController name = TextEditingController();
+  TextEditingController id = TextEditingController();
+  TextEditingController otherName = TextEditingController();
+  TextEditingController videoUrl = TextEditingController();
+  TextEditingController stepText = TextEditingController();
+  TextEditingController itemText = TextEditingController();
+  TextEditingController itemSizeText = TextEditingController();
+  TextEditingController sizeText = TextEditingController();
+  TextEditingController time = TextEditingController();
+  TextEditingController itemSizeName = TextEditingController();
+  TextEditingController sizeItem = TextEditingController();
+  TextEditingController description = TextEditingController();
 
   Future pickImage() async {
     try {
@@ -27,19 +58,24 @@ class _AddFoodState extends State<AddFood> {
     }
   }
 
-  bool isSuyuq = false;
-  bool isParhez = false;
-  bool isXamirli = false;
-  bool isPishiriq = false;
-  bool isFastFood = false;
-  int videoUrls = 1;
-  int imageCount = 1;
-  int foodName = 1;
-  int item = 1;
-  int itemSize = 1;
-  int steps = 1;
-  TextEditingController name = TextEditingController();
-  TextEditingController id = TextEditingController();
+  ///
+  ///
+  ///
+  ///
+  ///
+  addName() {
+    setState(() {
+      namesList.add(otherName.text.trim());
+      otherName.text = "";
+    });
+  }
+
+  void addVideo() {
+    setState(() {
+      videoList.add(videoUrl.text.trim());
+      videoUrl.text = "";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +86,8 @@ class _AddFoodState extends State<AddFood> {
       body: CustomScrollView(
         slivers: [
           titleBar("Taom nomi va ID-sini qo'shish"),
-          textField("Taom Nomi"),
-          textField("Taom ID-si"),
+          textField("Taom Nomi", name),
+          textField("Taom ID-si", id),
           divider(),
           titleBar("Taomning Turi"),
           SliverToBoxAdapter(
@@ -140,11 +176,9 @@ class _AddFoodState extends State<AddFood> {
                     isFastFood = value;
                   });
                 },
-                //  secondary: const Icon(Icons.food),
               ),
             ),
           ),
-
           divider(),
           titleBar("Taomning boshqa nomlarini qo'shish"),
           SliverList(
@@ -155,27 +189,39 @@ class _AddFoodState extends State<AddFood> {
                     left: 20,
                     right: 20,
                   ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      suffixIcon: foodName == index + 1
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  foodName++;
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.add,
-                                color: Colors.blue,
-                              ),
-                            )
-                          : null,
-                      labelText: "Taomning boshqa nomi",
+                  child: Text(
+                    "${index + 1}. ${namesList[index]}",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
                 );
               },
-              childCount: foodName,
+              childCount: namesList.length,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+              ),
+              child: TextField(
+                controller: otherName,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      addName();
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  labelText: "Taomning boshqa nomi",
+                ),
+              ),
             ),
           ),
           divider(),
@@ -188,27 +234,39 @@ class _AddFoodState extends State<AddFood> {
                     left: 20,
                     right: 20,
                   ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      suffixIcon: videoUrls == index + 1
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  videoUrls++;
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.add,
-                                color: Colors.blue,
-                              ),
-                            )
-                          : null,
-                      labelText: "Tayyorlanish videosi havolasi",
+                  child: Text(
+                    "${index + 1}. ${videoList[index]}",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
                 );
               },
-              childCount: videoUrls,
+              childCount: videoList.length,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+              ),
+              child: TextField(
+                controller: videoUrl,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      addVideo();
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  labelText: "Video Havolasi Qo'shish",
+                ),
+              ),
             ),
           ),
           divider(),
@@ -257,6 +315,7 @@ class _AddFoodState extends State<AddFood> {
                     right: 20,
                   ),
                   child: TextField(
+                    controller: stepText,
                     decoration: InputDecoration(
                       suffixIcon: steps == index + 1
                           ? IconButton(
@@ -291,6 +350,7 @@ class _AddFoodState extends State<AddFood> {
                     top: 12,
                   ),
                   child: TextField(
+                    controller: itemText,
                     decoration: InputDecoration(
                         labelText: "Masalliq Nomi",
                         suffixIcon: IconButton(
@@ -325,8 +385,8 @@ class _AddFoodState extends State<AddFood> {
           ),
           divider(),
           titleBar("Ma'lum Miqdorda tayyorlash"),
-          textField("Miqdori (kg, portsiya, dona ...)"),
-          textField("Sarflanadigan Vaqt"),
+          textField("Miqdori (kg, portsiya, dona ...)", itemSizeText),
+          textField("Sarflanadigan Vaqt", time),
           const SliverToBoxAdapter(
             child: SizedBox(
               height: 15,
@@ -356,7 +416,7 @@ class _AddFoodState extends State<AddFood> {
           ),
           divider(),
           titleBar("Taom Haqida"),
-          textField("Taom Haqida Ma'lumot"),
+          textField("Taom Haqida Ma'lumot", description),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -494,7 +554,7 @@ class _AddFoodState extends State<AddFood> {
     );
   }
 
-  Widget textField(String label) {
+  Widget textField(String label, TextEditingController controller) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.only(
@@ -503,6 +563,7 @@ class _AddFoodState extends State<AddFood> {
           top: 12,
         ),
         child: TextField(
+          controller: controller,
           decoration: InputDecoration(
             labelText: label,
           ),
